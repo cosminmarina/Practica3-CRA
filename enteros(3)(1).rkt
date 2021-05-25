@@ -1,3 +1,4 @@
+#lang scheme
 ; Booleanos
 
 (define true (lambda (x y) x))
@@ -416,3 +417,172 @@
 (define mcdent (lambda (r)
                  (lambda (s)
                    ((par ((mcdnat (primero (absoluto r))) (primero (absoluto s)))) zero))))
+
+
+
+;; listas
+
+(define nil (lambda (z) z))
+
+(define consl (lambda (x)
+               (lambda (y) ((par false) ((par x) y)))
+               ))
+
+(define null primero)
+
+(define head (lambda (z)
+             (primero (segundo z))
+             )
+  )
+
+(define tail (lambda (z)
+               (segundo (segundo z))
+               )
+  )
+
+;;; Longitud
+(define longitud
+  (lambda (l)
+      ((Y (lambda (f)
+         (lambda (x)
+          (((null x)
+            (lambda (no_use)
+              zero
+            )
+            (lambda (no_use)
+              (sucesor (f (tail x)))
+            )
+          )
+            zero)  ; Pasa zero como argumento de no_use
+        )
+      ))
+        l) ; Pasa l como el valor inicial de x.
+    )
+)
+
+;;; Concatenar
+(define concatenar
+  (lambda (l1)
+    (lambda (l2)
+      (((Y (lambda (f)
+         (lambda (x)
+           (lambda (y)
+          (((null x)
+            (lambda (no_use)
+              y
+            )
+            (lambda (no_use)
+              ((consl (head x))
+               ((f (tail x)) y)
+              )
+            )
+          )
+            zero)  ; Pasa zero como argumento de no_use
+        )
+        ) 
+      )
+          )
+        l1) ; Pasa l1 como el valor inicial de x.
+       l2) ; Pasa l2 como el valor inicial de y
+    )
+  )
+)
+
+;;;Inversa
+(define inversaaux
+  (lambda (l1)
+    (lambda (l2)
+      (((Y (lambda (f)
+             (lambda (x)
+               (lambda (y)
+                 (((null x) 
+                   (lambda (no_use)
+                     y
+                     )
+                   (lambda (no_use)
+                     ((concatenar ((f (tail x)) y))
+                      ((consl (head x)) nil)
+                      )
+                     )
+                   )
+                  zero)  ; Pasa zero como argumento de no_use
+                 )
+               ) 
+             )
+           )
+        l1) ; Pasa l1 como el valor inicial de x.
+       l2) ; Pasa l2 como el valor inicial de y
+      )
+    )
+  )
+
+(define inversa (lambda (l)
+                  ((inversaaux l) nil)
+                )
+  
+  )
+
+;;; Pertenece
+(define pertenece
+  (lambda (l)
+    (lambda (n)
+      (((Y (lambda (f)
+         (lambda (x)
+           (lambda (y)
+          (((null x)
+            (lambda (no_use)
+              false
+            )
+            (lambda (no_use)
+              (
+               (((esigualent (head l)) n)
+               (lambda (no_use2)
+                 true
+                 )
+               (lambda (no_use2)
+                 ((f (tail x))y)
+                 )
+               )
+               zero) ; Pasa zero como argumento de no_use2
+            )
+          )
+            zero)  ; Pasa zero como argumento de no_use
+        )
+        ) 
+      )
+          )
+        l) ; Pasa l1 como el valor inicial de x.
+       n) ; Pasa l2 como el valor inicial de y
+    )
+  )
+)
+
+
+
+
+;;; mostrar-lista
+(define mostrar-lista (lambda (l)
+             (if (= (comprobar (longitud l)) 0)
+                 '()
+                 (cons (testenteros (head l)) (mostrar-lista (tail l))
+                 )
+             )
+       )
+)
+
+(define lista-1 ((consl uno) nil))
+(define lista-2 ((consl dos) lista-1))
+(define lista-4 ((consl cuatro)lista-2))
+(define lista-5 ((consl cinco)lista-1))
+;(comprobar (longitud lista-1))
+;(comprobar (longitud lista-2))
+;(mostrar-lista lista-1)
+;(mostrar-lista lista-2)
+(define lista-3 ((concatenar lista-1) lista-2))
+(define lista-6 ((concatenar lista-5) lista-4))
+(define lista-6-i (inversa lista-6))
+(mostrar-lista lista-3)
+(mostrar-lista lista-6)
+(mostrar-lista lista-6-i)
+(testenteros (head lista-4))
+((pertenece lista-6) (head lista-4))
