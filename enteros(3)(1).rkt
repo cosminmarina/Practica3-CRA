@@ -440,6 +440,12 @@
                )
   )
 
+#|
+-------------------------------------------------------
+| Parte 1. Codificacion operaciones usuales en listas |
+-------------------------------------------------------
+|#
+
 ;;; Longitud
 (define longitud
   (lambda (l)
@@ -519,7 +525,6 @@
 (define inversa (lambda (l)
                   ((inversaaux l) nil)
                 )
-  
   )
 
 ;;; Pertenece
@@ -535,12 +540,12 @@
             )
             (lambda (no_use)
               (
-               (((esigualent (head l)) n)
+               (((esigualent (head x)) y)
                (lambda (no_use2)
                  true
                  )
                (lambda (no_use2)
-                 ((f (tail x))y)
+                 ((f (tail x)) y)
                  )
                )
                zero) ; Pasa zero como argumento de no_use2
@@ -557,7 +562,138 @@
   )
 )
 
+#|
+------------------------------------------------
+| Parte 2. Codificacion siguientes operaciones |
+------------------------------------------------
+|#
 
+
+;;; Suma elementos lista
+(define sumelemlista
+  (lambda (l)
+      ((Y (lambda (f)
+         (lambda (x)
+           (((null x)
+            (lambda (no_use)
+              zero
+              )
+            (lambda (no_use)
+              ((sument (head x)) (f (tail x)))
+              )
+            )
+           zero)  ; Pasa zero como argumento de no_use
+           )
+            ))
+       l) ; Pasa l como el valor inicial de x.
+    )
+)
+
+;;; Maximo de lista
+(define maxlistaaux
+  (lambda (l)
+    (lambda (n)
+      (((Y (lambda (f)
+         (lambda (x)
+           (lambda (y)
+          (((null x)
+            (lambda (no_use)
+              y
+            )
+            (lambda (no_use)
+              (
+               (((esmayorent (head x)) y)
+               (lambda (no_use2)
+                 ((f (tail x)) (head x))
+                 )
+               (lambda (no_use2)
+                 ((f (tail x)) y)
+                 )
+               )
+               zero) ; Pasa zero como argumento de no_use2
+            )
+          )
+            zero)  ; Pasa zero como argumento de no_use
+        )
+        ) 
+      )
+          )
+        l) ; Pasa l1 como el valor inicial de x.
+       n) ; Pasa l2 como el valor inicial de y
+    )
+  )
+)
+
+(define maxlista (lambda(l)
+                   (
+                    ((null l)
+                     (lambda (no_use2)
+                       nil
+                       )
+                     (lambda (no_use2)
+                       (testenteros ((maxlistaaux (tail l)) (head l)))
+                       )
+                     )
+                    zero) ; Pasa zero como argumento de no_use2
+                   )
+  )
+
+;;; Minimo de lista
+(define minlistaaux
+  (lambda (l)
+    (lambda (n)
+      (((Y (lambda (f)
+         (lambda (x)
+           (lambda (y)
+          (((null x)
+            (lambda (no_use)
+              y
+            )
+            (lambda (no_use)
+              (
+               (((esmenorent (head x)) y)
+               (lambda (no_use2)
+                 ((f (tail x)) (head x))
+                 )
+               (lambda (no_use2)
+                 ((f (tail x)) y)
+                 )
+               )
+               zero) ; Pasa zero como argumento de no_use2
+            )
+          )
+            zero)  ; Pasa zero como argumento de no_use
+        )
+        ) 
+      )
+          )
+        l) ; Pasa l1 como el valor inicial de x.
+       n) ; Pasa l2 como el valor inicial de y
+    )
+  )
+)
+
+(define minlista (lambda(l)
+                   (
+                    ((null l)
+                     (lambda (no_use2)
+                       nil
+                       )
+                     (lambda (no_use2)
+                       (testenteros ((minlistaaux (tail l)) (head l)))
+                       )
+                     )
+                    zero) ; Pasa zero como argumento de no_use2
+                   )
+  )
+
+;;; Suma escalar de 2 listas
+(define sumesc2listas (lambda (l1)
+                         (lambda (l2)
+                           (testenteros ((sument (sumelemlista l1)) (sumelemlista l2)))
+                           )
+                         )
+  )
 
 
 ;;; mostrar-lista
@@ -578,11 +714,21 @@
 ;(comprobar (longitud lista-2))
 ;(mostrar-lista lista-1)
 ;(mostrar-lista lista-2)
-(define lista-3 ((concatenar lista-1) lista-2))
+(define lista-1-2 ((concatenar lista-1) lista-2))
 (define lista-6 ((concatenar lista-5) lista-4))
 (define lista-6-i (inversa lista-6))
-(mostrar-lista lista-3)
+(mostrar-lista lista-1-2)
 (mostrar-lista lista-6)
 (mostrar-lista lista-6-i)
-(testenteros (head lista-4))
-((pertenece lista-6) (head lista-4))
+#|((sumesc2listas lista-6) lista-2)
+(maxlista lista-6)
+(maxlista lista-6-i)
+(maxlista lista-2)
+(maxlista nil)
+(minlista lista-6)
+(minlista lista-6-i)
+(minlista lista-2)
+(minlista nil)
+(testenteros (sumelemlista lista-6))
+((pertenece lista-6) tres)
+((pertenece lista-6) cuatro)|#
